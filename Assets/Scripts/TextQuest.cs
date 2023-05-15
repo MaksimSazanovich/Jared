@@ -119,13 +119,13 @@ public class TextQuest : MonoBehaviour
         var currentAction = _roomInfo[_currentIndex].Actions[index];
 
 
-        if (currentAction.Description == "[Атаковать]" && stress.StressCount >= 10)
+        if (currentAction.Index == 15 && stress.StressCount >= 10)
         {
             _currentIndex = 29;
         }
-        else      
-        _currentIndex = currentAction.Index;
-        
+        else
+            _currentIndex = currentAction.Index;
+
         //clickClip.Play();
 
         currentAction.OnAnswered.Invoke();
@@ -140,6 +140,7 @@ public class TextQuest : MonoBehaviour
 
     private void Start()
     {
+        _currentIndex = 0;
         Load();
         informationWindow.SetStartHeight();
         SetRoomInfo();
@@ -161,11 +162,24 @@ public class TextQuest : MonoBehaviour
     {
         var currentRoom = _roomInfo[_currentIndex];
         var currentRoomActions = currentRoom.Actions;
-        for (var i = 0; i < currentRoomActions.Length; i++)
+        if (_currentIndex == 32 && stress.StressCount < 10)
         {
-            _actionButtons[i].gameObject.SetActive(true);
-            _actionButtons[i].interactable = true;
+            for (var i = 0; i < currentRoomActions.Length - 1; i++)
+            {
+                _actionButtons[i].gameObject.SetActive(true);
+                _actionButtons[i].interactable = true;
+            }
+            Debug.Log("QWTERYUTTT");
         }
+        else
+        {
+            for (var i = 0; i < currentRoomActions.Length; i++)
+            {
+                _actionButtons[i].gameObject.SetActive(true);
+                _actionButtons[i].interactable = true;
+            }
+        }
+
     }
 
 

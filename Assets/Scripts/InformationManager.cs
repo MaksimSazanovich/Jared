@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.Events;
-using Newtonsoft.Json.Linq;
-using System;
 
 public class InformationManager : MonoBehaviour
 {
@@ -54,23 +52,34 @@ public class InformationManager : MonoBehaviour
     IEnumerator TypeSentense(string sentence)
     {
         informationText.text = "";
-        //foreach (char letter in sentence.ToCharArray())
-        //{
 
-        //}
         informationWindow.SetStartHeight();
-        //NewLine.Invoke();
+
+
         foreach (char letter in sentence.ToCharArray())
         {
-            numberOfLetters++;
-            informationText.text += letter;
-            if (numberOfLetters >= lettersInSentence)
+            if (timeBetweenLetters <= 0.0001f)
             {
-                numberOfLetters = 0;
-                NewLine.Invoke();
+                informationText.text = "";
+                informationText.text = sentence;
+                yield return new WaitForSeconds(timeBetweenLetters);
             }
-            yield return new WaitForSeconds(timeBetweenLetters);
+            else
+            {
+                numberOfLetters++;
+                informationText.text += letter;
+                if (numberOfLetters >= lettersInSentence)
+                {
+                    numberOfLetters = 0;
+                    NewLine.Invoke();
+                }
+                yield return new WaitForSeconds(timeBetweenLetters);
+            }
+
         }
+
+        //NewLine.Invoke();
+
         EndWriting.Invoke();
     }
 
@@ -87,4 +96,6 @@ public class InformationManager : MonoBehaviour
     //}
 
     public void SetWritingSpeed(float value) => timeBetweenLetters = value;
+
+    private void InvokeEndWriting() => EndWriting.Invoke();
 }
